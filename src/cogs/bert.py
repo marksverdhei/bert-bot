@@ -4,7 +4,7 @@ import discord
 from transformers import BertTokenizer, BertForMaskedLM
 import torch
 import functools
-
+import re
 from cogs.utils import embed_templates
 
 
@@ -22,10 +22,12 @@ nor_model.eval()
 
 
 def get_topn(content, tokenizer, model, mask_id, n):
+    content = re.sub("_+", "[MASK]", content)
     tokens = tokenizer(content, return_tensors="pt")
     with torch.no_grad():
         outputs = model(**tokens).logits.squeeze()
     mask_positions, = torch.where(tokens.input_ids[0] == mask_id)
+
     if not len(mask_positions):
         yield ""
     else:
@@ -83,7 +85,7 @@ class Bert(commands.Cog):
         content = " ".join(content)
 
         result = functools.reduce(
-            (lambda x, y: x.replace("[MASK]", y, 1)),
+            (lambda x, y: re.sub(r"(\[MASK\]|_+)", y, x, 1)),
             get_topn(content, tokenizer, model, mask_id, 1),
             content
         )
