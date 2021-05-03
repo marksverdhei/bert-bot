@@ -21,7 +21,7 @@ nor_model.eval()
 # #
 
 
-def get_topn(content, tokenizer, model, mask_id, n):
+def get_topn(content, tokenizer, model, mask_id, n, stopwords=False):
     content = re.sub("_+", "[MASK]", content)
     tokens = tokenizer(content, return_tensors="pt")
     with torch.no_grad():
@@ -131,7 +131,7 @@ class Bert(commands.Cog):
         content = " ".join(content)
 
         result = functools.reduce(
-            (lambda x, y: x.replace("[MASK]", y, 1)),
+            (lambda x, y: re.sub(r"(\[MASK\]|_+)", y, x, 1)),
             get_topn(content, nor_tokenizer, nor_model, nor_mask_id, 1),
             content
         )
