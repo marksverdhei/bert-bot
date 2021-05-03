@@ -17,7 +17,11 @@ mentions = discord.AllowedMentions(
 
 class Bot(commands.Bot):
     def __init__(self):
-        super().__init__(command_prefix=os.getenv("PREFIX"), case_insensitive=True, allowed_mentions=mentions)
+        super().__init__(
+            command_prefix=commands.when_mentioned_or(os.getenv("PREFIX")),
+            case_insensitive=True,
+            allowed_mentions=mentions
+        )
 
 
 bot = Bot()
