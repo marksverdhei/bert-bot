@@ -91,8 +91,8 @@ class Bert(commands.Cog):
         """
         Make Bert fill in words marked with [MASK] in sentences
         """
-        result = insert(tokenizer, model, " ".join(content))
-
+        content = " ".join(content)
+        result = insert(tokenizer, model, content)
 
         if not result or result == content:
             return await no_mask_error(ctx)
@@ -126,8 +126,8 @@ class Bert(commands.Cog):
         """
         Make Bert fill in words marked with [MASK] in sentences
         """
-
-        result = insert(nor_tokenizer, nor_model, " ".join(content))
+        content = " ".join(content)
+        result = insert(nor_tokenizer, nor_model, content)
 
         if not result or result == content:
             return await no_mask_error(ctx)
