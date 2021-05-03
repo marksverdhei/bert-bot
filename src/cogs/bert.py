@@ -71,9 +71,7 @@ class Bert(commands.Cog):
         if not message:
             return await no_mask_error(ctx)
 
-        embed = discord.Embed(color=ctx.author.color, description=f"\n{message}\n")
-        embed_templates.default_footer(ctx, embed)
-        await ctx.send(embed=embed)
+        await ctx.send(message)
 
     @bert.command(name="insert")
     async def insert(self, ctx, *content):
@@ -92,9 +90,7 @@ class Bert(commands.Cog):
         if not result or result == content:
             return await no_mask_error(ctx)
 
-        embed = discord.Embed(color=ctx.author.color, description=result)
-        embed_templates.default_footer(ctx, embed)
-        await ctx.send(embed=embed)
+        await ctx.send(result)
 
     @commands.group(name="norbert")
     async def norbert(self, ctx):
@@ -121,9 +117,7 @@ class Bert(commands.Cog):
         if not message:
             return await no_mask_error(ctx)
 
-        embed = discord.Embed(color=ctx.author.color, description=f"\n{message}\n")
-        embed_templates.default_footer(ctx, embed)
-        await ctx.send(embed=embed)
+        await ctx.send(message)
 
     @norbert.command(name="insert")
     async def norinsert(self, ctx, *content):
@@ -142,9 +136,7 @@ class Bert(commands.Cog):
         if not result or result == content:
             return await no_mask_error(ctx)
 
-        embed = discord.Embed(color=ctx.author.color, description=result)
-        embed_templates.default_footer(ctx, embed)
-        await ctx.send(embed=embed)
+        await ctx.send(result)
 
 
 def setup(bot):
