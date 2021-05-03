@@ -11,7 +11,9 @@ load_dotenv()
 
 mentions = discord.AllowedMentions(
     everyone=False,
-    replied_user=False
+    replied_user=False,
+    users=False,
+    roles=False
 )
 
 
