@@ -39,6 +39,7 @@ def get_topn(content, tokenizer, model, mask_id, n):
 
 async def no_mask_error(ctx):
     embed = discord.Embed(color=discord.Color.gold(), description="⚠ Invalid call signature. Must include a `[MASK]`")
+    embed_templates.default_footer(ctx, embed)
     await ctx.send(embed=embed)
 
 
