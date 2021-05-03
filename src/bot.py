@@ -31,6 +31,10 @@ async def on_ready():
             bot.load_extension(f'cogs.{name}')
 
     print(f'{bot.user.name} has connected to Discord!')
+    await bot.change_presence(
+        activity=discord.Activity(type=3, name=os.getenv("ACTIVITY_MESSAGE")),
+        status=discord.Status.online
+    )
 
 
 bot.run(os.getenv("DISCORD_TOKEN"), bot=True, reconnect=True)
