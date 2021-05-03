@@ -46,7 +46,7 @@ class Bert(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group()
+    @commands.group(name="bert")
     async def bert(self, ctx):
         """
         Bert commands
@@ -55,7 +55,7 @@ class Bert(commands.Cog):
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
 
-    @bert.command()
+    @bert.command(name="mlm")
     async def mlm(self, ctx, *content):
         """
         Bert MLM
@@ -75,7 +75,7 @@ class Bert(commands.Cog):
         embed_templates.default_footer(ctx, embed)
         await ctx.send(embed=embed)
 
-    @bert.command()
+    @bert.command(name="insert")
     async def insert(self, ctx, *content):
         """
         Make Bert fill in words marked with [MASK] in sentences
@@ -96,7 +96,16 @@ class Bert(commands.Cog):
         embed_templates.default_footer(ctx, embed)
         await ctx.send(embed=embed)
 
-    @bert.command()
+    @commands.group(name="norbert")
+    async def norbert(self, ctx):
+        """
+        NorBert commands
+        """
+
+        if ctx.invoked_subcommand is None:
+            await ctx.send_help(ctx.command)
+
+    @norbert.command(name="mlm")
     async def normlm(self, ctx, *content):
         """
         NorBert MLM
@@ -116,7 +125,7 @@ class Bert(commands.Cog):
         embed_templates.default_footer(ctx, embed)
         await ctx.send(embed=embed)
 
-    @bert.command()
+    @norbert.command(name="insert")
     async def norinsert(self, ctx, *content):
         """
         Make Bert fill in words marked with [MASK] in sentences
