@@ -34,7 +34,7 @@ def get_topn(content, tokenizer, model, mask_id, n):
             topn = (-pred).squeeze().argsort()[:n]
             substitutions = tokenizer.convert_ids_to_tokens(topn)
             for j, s in enumerate(substitutions):
-                yield f"`{s}`"
+                yield f"**{s}**"
 
 
 async def no_mask_error(ctx):
