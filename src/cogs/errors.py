@@ -26,11 +26,11 @@ class Errors(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
 
-        # Ignore if command has its own error handling
+        #  Ignore if command has its own error handling
         if hasattr(ctx.command, 'on_error'):
             return
 
-        # Ignored errors
+        #  Ignored errors
         ignored = commands.CommandNotFound
         error = getattr(error, 'original', error)
         if isinstance(error, ignored):
@@ -45,7 +45,7 @@ class Errors(commands.Cog):
             self.bot.get_command(f'{ctx.command}').reset_cooldown(ctx)
             return await ctx.send_help(ctx.command)
 
-		# Print full exception to console
+        #  Print full exception to console
         print(f'Ignoring exception in command {ctx.command}:', file=sys.stderr)
         traceback.print_exception(
             type(error),
