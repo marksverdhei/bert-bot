@@ -40,7 +40,7 @@ def get_topn(content, tokenizer, model, mask_id, n):
 async def no_mask_error(ctx):
     embed = discord.Embed(color=discord.Color.gold(), description="⚠ Invalid call signature. Must include a `[MASK]`")
     embed_templates.default_footer(ctx, embed)
-    await ctx.send(embed=embed)
+    await ctx.reply(embed=embed)
 
 
 class Bert(commands.Cog):
@@ -72,7 +72,7 @@ class Bert(commands.Cog):
         if not message:
             return await no_mask_error(ctx)
 
-        await ctx.send(message)
+        await ctx.reply(message)
 
     @bert.command(name="insert")
     async def insert(self, ctx, *content):
@@ -91,7 +91,7 @@ class Bert(commands.Cog):
         if not result or result == content:
             return await no_mask_error(ctx)
 
-        await ctx.send(result)
+        await ctx.reply(result)
 
     @commands.group(name="norbert")
     async def norbert(self, ctx):
@@ -118,7 +118,7 @@ class Bert(commands.Cog):
         if not message:
             return await no_mask_error(ctx)
 
-        await ctx.send(message)
+        await ctx.reply(message)
 
     @norbert.command(name="insert")
     async def norinsert(self, ctx, *content):
@@ -137,7 +137,7 @@ class Bert(commands.Cog):
         if not result or result == content:
             return await no_mask_error(ctx)
 
-        await ctx.send(result)
+        await ctx.reply(result)
 
 
 def setup(bot):
