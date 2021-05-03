@@ -50,13 +50,13 @@ class Bert(commands.Cog):
         self.bot = bot
 
     @commands.group(name="bert")
-    async def bert(self, ctx, *content):
+    async def bert(self, ctx):
         """
         Bert commands
         """
 
         if ctx.invoked_subcommand is None:
-            await ctx.invoke(self.bot.get_command("bert insert"), *content)
+            await ctx.send_help(ctx.command)
 
     @bert.command(name="mlm")
     async def mlm(self, ctx, *content):
@@ -96,13 +96,13 @@ class Bert(commands.Cog):
         await ctx.reply(result)
 
     @commands.group(name="norbert")
-    async def norbert(self, ctx, *content):
+    async def norbert(self, ctx):
         """
         NorBert commands
         """
 
         if ctx.invoked_subcommand is None:
-            await ctx.invoke(self.bot.get_command("norbert insert"), *content)
+            await ctx.send_help(ctx.command)
 
     @norbert.command(name="mlm")
     async def normlm(self, ctx, *content):
