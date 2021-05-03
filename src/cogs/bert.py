@@ -39,6 +39,21 @@ def get_topn(content, tokenizer, model, mask_id, n, stopwords=False):
                 yield f"**{s}**"
 
 
+def insert(tokenizer, model, content):
+    return functools.reduce(
+        (lambda x, y: re.sub(r"(\[MASK\]|_+)", y, x, 1)),
+        get_topn(content, tokenizer, model, mask_id, 1),
+        content
+    )
+
+def get_mlm_message(tokenizer, model, content):
+    message = ""
+    for i, s in enumerate(get_topn(content, nor_tokenizer, nor_model, nor_mask_id, 5), start=1):
+        if s:
+            message += f"{i}: {s}\n"
+    return message
+
+
 async def no_mask_error(ctx):
     embed = discord.Embed(color=discord.Color.gold(), description="⚠ Invalid call signature. Must include a `[MASK]` or `_`")
     embed_templates.default_footer(ctx, embed)
@@ -63,13 +78,8 @@ class Bert(commands.Cog):
         """
         Bert MLM
         """
-
         content = " ".join(content)
-
-        message = ""
-        for i, s in enumerate(get_topn(content, tokenizer, model, mask_id, 5), start=1):
-            if s:
-                message += f"{i}: {s}\n"
+        result = get_mlm_message(tokenizer, model, content)
 
         if not message:
             return await no_mask_error(ctx)
@@ -81,14 +91,8 @@ class Bert(commands.Cog):
         """
         Make Bert fill in words marked with [MASK] in sentences
         """
+        result = insert(tokenizer, model, " ".join(content))
 
-        content = " ".join(content)
-
-        result = functools.reduce(
-            (lambda x, y: re.sub(r"(\[MASK\]|_+)", y, x, 1)),
-            get_topn(content, tokenizer, model, mask_id, 1),
-            content
-        )
 
         if not result or result == content:
             return await no_mask_error(ctx)
@@ -109,13 +113,8 @@ class Bert(commands.Cog):
         """
         NorBert MLM
         """
-
         content = " ".join(content)
-
-        message = ""
-        for i, s in enumerate(get_topn(content, nor_tokenizer, nor_model, nor_mask_id, 5), start=1):
-            if s:
-                message += f"{i}: {s}\n"
+        message = get_mlm_message(nor_tokenizer, nor_model, content)
 
         if not message:
             return await no_mask_error(ctx)
@@ -128,13 +127,7 @@ class Bert(commands.Cog):
         Make Bert fill in words marked with [MASK] in sentences
         """
 
-        content = " ".join(content)
-
-        result = functools.reduce(
-            (lambda x, y: re.sub(r"(\[MASK\]|_+)", y, x, 1)),
-            get_topn(content, nor_tokenizer, nor_model, nor_mask_id, 1),
-            content
-        )
+        result = insert(nor_tokenizer, nor_model, " ".join(content))
 
         if not result or result == content:
             return await no_mask_error(ctx)
