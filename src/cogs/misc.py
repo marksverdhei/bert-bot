@@ -7,7 +7,7 @@ class Misc(commands.Cog):
 
 	@commands.command()
 	async def ping(self, ctx):
-		await ctx.send("Pong!")
+		await ctx.reply("Pong!")
 
 
 def setup(bot):
