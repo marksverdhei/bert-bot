@@ -11,7 +11,7 @@ class Errors(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_command_completion(self, ctx):
+    async def on_command(self, ctx):
         """
         Prints command execution metadata
         """
