@@ -38,8 +38,9 @@ def get_topn(content, tokenizer, model, mask_id, n, stopwords=None):
         for pred in preds:
             sorted_logits = (-pred).squeeze().argsort()
             if stopwords is not None:
-                places_where_stopword_id = (1 - ((sorted_logits == stopwords[:, None]).sum(0))).bool()
-                topn = sorted_logits[places_where_stopword_id][:n]
+                places_where_stopword_id = ((sorted_logits == stopwords[:, None]).sum(0)).bool()
+                places_where_not_stopword_id = places_where_stopword_id.logical_not()
+                topn = sorted_logits[places_where_not_stopword_id][:n]
             else:
                 topn = sorted_logits[:n]
 
