@@ -29,12 +29,7 @@ def get_topn(content, tokenizer, model, mask_id, n, stopwords=None):
     with torch.no_grad():
         outputs = model(**tokens).logits.squeeze()
     mask_positions, = torch.where(tokens.input_ids[0] == mask_id)
-    print("mask positions:")
-    print(mask_positions)
-    print("Content:")
-    print(content)
-    print(tokenizer.convert_ids_to_tokens(tokens.input_ids[0]))
-    print(tokens.input_ids[0])
+
 
     if not len(mask_positions):
         yield ""
