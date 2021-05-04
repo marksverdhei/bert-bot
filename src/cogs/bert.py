@@ -89,7 +89,7 @@ class Bert(commands.Cog):
         Bert MLM
         """
         content = " ".join(content)
-        result = get_mlm_message(tokenizer, model, mask_id, content, stopwords=stopword_ids)
+        message = get_mlm_message(tokenizer, model, mask_id, content, stopwords=stopword_ids)
 
         if not message:
             return await no_mask_error(ctx)
