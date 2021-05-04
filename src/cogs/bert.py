@@ -59,7 +59,7 @@ def insert(tokenizer, model, mask_id, content, stopwords=None):
 
 def get_mlm_message(tokenizer, model, mask_id, content, stopwords=None):
     message = ""
-    for i, s in enumerate(get_topn(content, nor_tokenizer, nor_model, nor_mask_id, 5, stopwords=stopwords), start=1):
+    for i, s in enumerate(get_topn(content, tokenizer, model, mask_id, 5, stopwords=stopwords), start=1):
         if s:
             message += f"{i}: {s}\n"
     return message
