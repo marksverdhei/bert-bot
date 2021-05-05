@@ -22,7 +22,8 @@ class Misc(commands.Cog):
         """
 
         dev = await self.bot.fetch_user(142720616661909504)
-        invite_link = f'https://discordapp.com/oauth2/authorize?client_id={self.bot.user.id}&permissions=378944&scope=bot'
+        invite_link = 'https://discordapp.com/oauth2/authorize?client_id=' + \
+                      f'{self.bot.user.id}&permissions=378944&scope=bot'
 
         # Ping
         start = perf_counter()
@@ -40,14 +41,30 @@ class Misc(commands.Cog):
         embed.set_thumbnail(url=self.bot.user.avatar_url)
         embed.add_field(name='Dev', value=f'{dev.mention}\n{dev.name}#{dev.discriminator}', inline=False)
         embed.add_field(name='Uptime', value=await self.get_uptime(), inline=False)
-        embed.add_field(name='Ping', value=f'Real: {ping} ms\nWebsocket: {int(self.bot.latency * 1000)} ms', inline=False)
-        embed.add_field(name='Stats', value=f'{len(self.bot.users)} users\n{len(self.bot.guilds)} guilds', inline=False)
-        embed.add_field(name='Software', value=f'Discord.py {discord.__version__}\nPython {platform.python_version()}', inline=False)
+        embed.add_field(
+            name='Ping',
+            value=f'Real: {ping} ms\nWebsocket: {int(self.bot.latency * 1000)} ms',
+            inline=False
+        )
+        embed.add_field(
+            name='Stats',
+            value=f'{len(self.bot.users)} users\n{len(self.bot.guilds)} guilds',
+            inline=False
+        )
+        embed.add_field(
+            name='Software',
+            value=f'Discord.py {discord.__version__}\nPython {platform.python_version()}',
+            inline=False
+        )
         embed.add_field(name='RAM Usage', value=f'{memory_usage} MB', inline=False)
         embed.add_field(name='Kernel', value=f'{platform.system()} {platform.release()}', inline=False)
         if 'docker' in environ:
             embed.add_field(name='Docker', value='U+FE0F', inline=False)
-        embed.add_field(name='Links', value=f'[Source code]({self.bot.source_code_url}) | [Invite link]({invite_link})', inline=False)
+        embed.add_field(
+            name='Links',
+            value=f'[Source code]({self.bot.source_code_url}) | [Invite link]({invite_link})',
+            inline=False
+        )
         embed_templates.default_footer(ctx, embed)
         await status_msg.edit(embed=embed, content=None)
 

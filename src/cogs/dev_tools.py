@@ -2,7 +2,7 @@ from discord.ext import commands
 
 from os import system, listdir
 from git import Repo
-    
+
 
 class DevTools(commands.Cog):
     def __init__(self, bot):
@@ -16,7 +16,7 @@ class DevTools(commands.Cog):
         """
 
         await ctx.trigger_typing()
-        
+
         system("git pull")
 
         for file in listdir('./cogs'):
@@ -41,7 +41,7 @@ class DevTools(commands.Cog):
         """
 
         await ctx.trigger_typing()
-        
+
         system("git pull")
         githash = Repo('../').head.commit
 
