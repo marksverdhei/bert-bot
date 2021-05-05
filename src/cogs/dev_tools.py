@@ -1,4 +1,5 @@
 from discord.ext import commands
+import discord
 
 from os import system, listdir
 from git import Repo
@@ -31,7 +32,9 @@ class DevTools(commands.Cog):
 
         githash = Repo("../").head.commit
 
-        await ctx.reply(f"Done!\n\nI\"m on commit hash `{githash}`")
+        embed = discord.Embed(color=ctx.me.color, description="✅ Done!")
+        embed.add_field(name="Current commit hash", value=f"[{githash}]({self.bot.source_code_url}/commit/{githash})")
+        await ctx.reply(embed=embed)
 
     @commands.is_owner()
     @commands.command()
@@ -45,7 +48,8 @@ class DevTools(commands.Cog):
         system("git pull")
         githash = Repo("../").head.commit
 
-        await ctx.reply(f"Done!\n\nI\"m on commit hash `{githash}`")
+        embed = discord.Embed(color=ctx.me.color, description="✅ Done!")
+        embed.add_field(name="Current commit hash", value=f"[{githash}]({self.bot.source_code_url}/commit/{githash})")
 
     @commands.is_owner()
     @commands.command()
@@ -61,7 +65,8 @@ class DevTools(commands.Cog):
                 name = file[:-3]
                 self.bot.reload_extension(f"cogs.{name}")
 
-        await ctx.reply("Done!")
+        embed = discord.Embed(color=ctx.me.color, description="✅ Done!")
+        await ctx.reply(embed=embed)
 
 
 def setup(bot):
