@@ -4,6 +4,7 @@ import discord
 
 from dotenv import load_dotenv
 import os
+from time import time
 
 
 load_dotenv()
@@ -33,6 +34,9 @@ bot = Bot()
 
 @bot.event
 async def on_ready():
+    if not hasattr(bot, 'uptime'):
+        bot.uptime = time()
+
     for file in os.listdir('./cogs'):
         if file.endswith('.py'):
             name = file[:-3]
