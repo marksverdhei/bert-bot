@@ -25,6 +25,8 @@ class Bot(commands.Bot):
             allowed_mentions=mentions
         )
 
+        self.source_code_url = os.getenv("SOURCE_CODE_URL")
+
 
 bot = Bot()
 
