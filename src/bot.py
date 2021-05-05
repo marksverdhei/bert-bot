@@ -9,7 +9,7 @@ from time import time
 
 load_dotenv()
 
-
+intents = discord.Intents.all()
 mentions = discord.AllowedMentions(
     everyone=False,
     replied_user=False,
