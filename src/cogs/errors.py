@@ -45,6 +45,9 @@ class Errors(commands.Cog):
             self.bot.get_command(f'{ctx.command}').reset_cooldown(ctx)
             return await ctx.send_help(ctx.command)
 
+        elif isinstance(error, commands.NotOwner):
+            return await ctx.reply("This command can only be executed by a bot owner.")
+
         #  Print full exception to console
         print(f'Ignoring exception in command {ctx.command}:', file=sys.stderr)
         traceback.print_exception(
