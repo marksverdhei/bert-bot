@@ -19,19 +19,19 @@ class DevTools(commands.Cog):
 
         system("git pull")
 
-        for file in listdir('./cogs'):
-            if file.endswith('.py'):
+        for file in listdir("./cogs"):
+            if file.endswith(".py"):
                 name = file[:-3]
-                self.bot.unload_extension(f'cogs.{name}')
+                self.bot.unload_extension(f"cogs.{name}")
 
-        for file in listdir('./cogs'):
-            if file.endswith('.py'):
+        for file in listdir("./cogs"):
+            if file.endswith(".py"):
                 name = file[:-3]
-                self.bot.load_extension(f'cogs.{name}')
+                self.bot.load_extension(f"cogs.{name}")
 
-        githash = Repo('../').head.commit
+        githash = Repo("../").head.commit
 
-        await ctx.reply(f'Done!\n\nI\'m on commit hash `{githash}`')
+        await ctx.reply(f"Done!\n\nI\"m on commit hash `{githash}`")
 
     @commands.is_owner()
     @commands.command()
@@ -43,9 +43,9 @@ class DevTools(commands.Cog):
         await ctx.trigger_typing()
 
         system("git pull")
-        githash = Repo('../').head.commit
+        githash = Repo("../").head.commit
 
-        await ctx.reply(f'Done!\n\nI\'m on commit hash `{githash}`')
+        await ctx.reply(f"Done!\n\nI\"m on commit hash `{githash}`")
 
     @commands.is_owner()
     @commands.command()
@@ -56,12 +56,12 @@ class DevTools(commands.Cog):
 
         await ctx.trigger_typing()
 
-        for file in listdir('./cogs'):
-            if file.endswith('.py'):
+        for file in listdir("./cogs"):
+            if file.endswith(".py"):
                 name = file[:-3]
-                self.bot.reload_extension(f'cogs.{name}')
+                self.bot.reload_extension(f"cogs.{name}")
 
-        await ctx.reply('Done!')
+        await ctx.reply("Done!")
 
 
 def setup(bot):

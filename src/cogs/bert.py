@@ -91,6 +91,7 @@ class Bert(commands.Cog):
         """
         Bert MLM
         """
+
         content = " ".join(content)
         message = get_mlm_message(tokenizer, model, mask_id, content, stopwords=stopword_ids)
 
@@ -104,6 +105,7 @@ class Bert(commands.Cog):
         """
         Make Bert fill in words marked with [MASK] in sentences
         """
+
         content = " ".join(content)
         result = insert(tokenizer, model, mask_id, content, stopwords=stopword_ids)
 
@@ -126,6 +128,7 @@ class Bert(commands.Cog):
         """
         NorBert MLM
         """
+
         content = " ".join(content)
         message = get_mlm_message(nor_tokenizer, nor_model, nor_mask_id, content, stopwords=nor_stopword_ids)
 
@@ -139,6 +142,7 @@ class Bert(commands.Cog):
         """
         Make Bert fill in words marked with [MASK] in sentences
         """
+
         content = " ".join(content)
         result = insert(nor_tokenizer, nor_model, nor_mask_id, content, stopwords=nor_stopword_ids)
 

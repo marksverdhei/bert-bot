@@ -1,4 +1,3 @@
-# bot.py
 from discord.ext import commands
 import discord
 
@@ -34,17 +33,17 @@ bot = Bot()
 
 @bot.event
 async def on_ready():
-    if not hasattr(bot, 'uptime'):
+    if not hasattr(bot, "uptime"):
         bot.uptime = time()
 
-    for file in os.listdir('./cogs'):
-        if file.endswith('.py'):
+    for file in os.listdir("./cogs"):
+        if file.endswith(".py"):
             name = file[:-3]
-            bot.load_extension(f'cogs.{name}')
+            bot.load_extension(f"cogs.{name}")
 
-    print('-' * 50)
-    print(f'{bot.user.name} has connected to Discord!')
-    print('-' * 50)
+    print("-" * 50)
+    print(f"{bot.user.name} has connected to Discord!")
+    print("-" * 50)
     await bot.change_presence(
         activity=discord.Activity(type=3, name=os.getenv("ACTIVITY_MESSAGE")),
         status=discord.Status.online

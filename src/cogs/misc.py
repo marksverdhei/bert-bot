@@ -15,19 +15,19 @@ class Misc(commands.Cog):
         self.bot = bot
 
     @commands.bot_has_permissions(embed_links=True)
-    @commands.command(aliases=['info', 'about'])
+    @commands.command(aliases=["info", "about"])
     async def botinfo(self, ctx):
         """
         Displays key information about the bot
         """
 
         dev = await self.bot.fetch_user(142720616661909504)
-        invite_link = 'https://discordapp.com/oauth2/authorize?client_id=' + \
-                      f'{self.bot.user.id}&permissions=378944&scope=bot'
+        invite_link = "https://discordapp.com/oauth2/authorize?client_id=" + \
+                      f"{self.bot.user.id}&permissions=378944&scope=bot"
 
         # Ping
         start = perf_counter()
-        status_msg = await ctx.send('Pinging...')
+        status_msg = await ctx.send("Pinging...")
         end = perf_counter()
         ping = int((end - start) * 1000)
 
@@ -39,30 +39,30 @@ class Misc(commands.Cog):
         embed = discord.Embed(color=ctx.me.color, url=self.bot.source_code_url, title=self.bot.user.name)
         embed.set_author(name=dev.name, icon_url=dev.avatar_url)
         embed.set_thumbnail(url=self.bot.user.avatar_url)
-        embed.add_field(name='Dev', value=f'{dev.mention}\n{dev.name}#{dev.discriminator}', inline=False)
-        embed.add_field(name='Uptime', value=await self.get_uptime(), inline=False)
+        embed.add_field(name="Dev", value=f"{dev.mention}\n{dev.name}#{dev.discriminator}", inline=False)
+        embed.add_field(name="Uptime", value=await self.get_uptime(), inline=False)
         embed.add_field(
-            name='Ping',
-            value=f'Real: {ping} ms\nWebsocket: {int(self.bot.latency * 1000)} ms',
+            name="Ping",
+            value=f"Real: {ping} ms\nWebsocket: {int(self.bot.latency * 1000)} ms",
             inline=False
         )
         embed.add_field(
-            name='Stats',
-            value=f'{len(self.bot.users)} users\n{len(self.bot.guilds)} guilds',
+            name="Stats",
+            value=f"{len(self.bot.users)} users\n{len(self.bot.guilds)} guilds",
             inline=False
         )
         embed.add_field(
-            name='Software',
-            value=f'Discord.py {discord.__version__}\nPython {platform.python_version()}',
+            name="Software",
+            value=f"Discord.py {discord.__version__}\nPython {platform.python_version()}",
             inline=False
         )
-        embed.add_field(name='RAM Usage', value=f'{memory_usage} MB', inline=False)
-        embed.add_field(name='Kernel', value=f'{platform.system()} {platform.release()}', inline=False)
-        if 'docker' in environ:
-            embed.add_field(name='Docker', value='U+FE0F', inline=False)
+        embed.add_field(name="RAM Usage", value=f"{memory_usage} MB", inline=False)
+        embed.add_field(name="Kernel", value=f"{platform.system()} {platform.release()}", inline=False)
+        if "docker" in environ:
+            embed.add_field(name="Docker", value="U+FE0F", inline=False)
         embed.add_field(
-            name='Links',
-            value=f'[Source code]({self.bot.source_code_url}) | [Invite link]({invite_link})',
+            name="Links",
+            value=f"[Source code]({self.bot.source_code_url}) | [Invite link]({invite_link})",
             inline=False
         )
         embed_templates.default_footer(ctx, embed)
@@ -76,7 +76,7 @@ class Misc(commands.Cog):
         """
 
         embed = discord.Embed(color=ctx.me.color)
-        embed.add_field(name='🔌 Uptime', value=await self.get_uptime())
+        embed.add_field(name="🔌 Uptime", value=await self.get_uptime())
         embed_templates.default_footer(ctx, embed)
         await ctx.reply(embed=embed)
 
@@ -87,22 +87,24 @@ class Misc(commands.Cog):
         Check version
         """
 
-        githash = Repo('../').head.commit
+        githash = Repo("../").head.commit
 
-        embed = discord.Embed(color=ctx.me.color, title='Git commit hash')
-        embed.description = f'[{githash}]({self.bot.source_code_url}/commit/{githash})'
+        embed = discord.Embed(color=ctx.me.color, title="Git commit hash")
+        embed.description = f"[{githash}]({self.bot.source_code_url}/commit/{githash})"
         await ctx.reply(embed=embed)
 
     @commands.bot_has_permissions(embed_links=True)
-    @commands.command(aliases=['githubrepo', 'repo', 'git'])
+    @commands.command(aliases=["githubrepo", "repo", "git"])
     async def github(self, ctx):
         """
         Get source code url
         """
 
         embed = discord.Embed(color=ctx.me.color)
-        embed.add_field(name='🔗 Github Repo',
-                        value=f'[Click here]({self.bot.source_code_url}) to view my source code')
+        embed.add_field(
+            name="🔗 Github Repo",
+            value=f"[Click here]({self.bot.source_code_url}) to view my source code"
+        )
         embed_templates.default_footer(ctx, embed)
         await ctx.send(embed=embed)
 
@@ -121,7 +123,7 @@ class Misc(commands.Cog):
         hours, remainder = divmod(remainder, 60 * 60)
         minutes, seconds = divmod(remainder, 60)
 
-        return f'{days}d, {hours}h, {minutes}m, {seconds}s'
+        return f"{days}d, {hours}h, {minutes}m, {seconds}s"
 
 
 def setup(bot):
