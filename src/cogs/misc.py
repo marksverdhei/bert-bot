@@ -76,6 +76,19 @@ class Misc(commands.Cog):
         embed.description = f'[{githash}]({self.bot.source_code_url}/commit/{githash})'
         await ctx.reply(embed=embed)
 
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.command(aliases=['githubrepo', 'repo', 'git'])
+    async def github(self, ctx):
+        """
+        Get source code url
+        """
+
+        embed = discord.Embed(color=ctx.me.color)
+        embed.add_field(name='🔗 Github Repo',
+                        value=f'[Click here]({self.bot.source_code_url}) to view my source code')
+        embed_templates.default_footer(ctx, embed)
+        await ctx.send(embed=embed)
+
     @commands.command()
     async def ping(self, ctx):
         await ctx.reply("Pong!")
