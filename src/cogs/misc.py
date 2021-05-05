@@ -5,6 +5,7 @@ from time import time, perf_counter
 import platform
 from os import getpid, environ
 from psutil import Process
+from git import Repo
 
 from cogs.utils import embed_templates
 
@@ -60,6 +61,19 @@ class Misc(commands.Cog):
         embed = discord.Embed(color=ctx.me.color)
         embed.add_field(name='🔌 Uptime', value=await self.get_uptime())
         embed_templates.default_footer(ctx, embed)
+        await ctx.reply(embed=embed)
+
+    @commands.bot_has_permissions(embed_links=True)
+    @commands.command()
+    async def version(self, ctx):
+        """
+        Check version
+        """
+
+        githash = Repo('../').head.commit
+
+        embed = discord.Embed(color=ctx.me.color, title='Git commit hash')
+        embed.description = f'[{githash}]({self.bot.source_code_url}/commit/{githash})'
         await ctx.reply(embed=embed)
 
     @commands.command()
