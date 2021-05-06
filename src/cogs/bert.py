@@ -49,11 +49,14 @@ def get_topn(content, tokenizer, model, mask_id, n, stopwords=None):
 
 
 def insert(tokenizer, model, mask_id, content, stopwords=None):
-    return functools.reduce(
+    result_string = functools.reduce(
         (lambda x, y: re.sub(r"(\[MASK\]|_+)", y, x, 1)),
         get_topn(content, tokenizer, model, mask_id, 1, stopwords=stopwords),
         content
     )
+    result_string = re.sub(r"\s\*\*##", r"**##", result_string)
+    result_string = re.sub("##", "", result_string)
+    return result_string
 
 
 def get_mlm_message(tokenizer, model, mask_id, content, stopwords=None):
