@@ -19,8 +19,7 @@ class Errors(commands.Cog):
         print(
             f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | " +
             f"{'❌ ' if ctx.command_failed else '✔ '} {ctx.command} - " +
-            f"{ctx.author.name}#{ctx.author.discriminator} ({ctx.author.id}) | " +
-            f"{ctx.guild.id}-{ctx.channel.id}-{ctx.message.id}"
+            f"{ctx.author.name}#{ctx.author.discriminator} ({ctx.author.id})"
         )
 
     @commands.Cog.listener()
