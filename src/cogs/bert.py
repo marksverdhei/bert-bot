@@ -30,7 +30,6 @@ def get_topn(content, tokenizer, model, mask_id, n, stopwords=None):
         outputs = model(**tokens).logits.squeeze()
     mask_positions, = torch.where(tokens.input_ids[0] == mask_id)
 
-
     if not len(mask_positions):
         yield ""
     else:
@@ -66,7 +65,10 @@ def get_mlm_message(tokenizer, model, mask_id, content, stopwords=None):
 
 
 async def no_mask_error(ctx):
-    embed = discord.Embed(color=discord.Color.gold(), description="⚠ Invalid call signature. Must include a `[MASK]` or `_`")
+    embed = discord.Embed(
+        color=discord.Color.gold(),
+        description="⚠ Invalid call signature. Must include a `[MASK]` or `_`"
+    )
     embed_templates.default_footer(ctx, embed)
     await ctx.reply(embed=embed)
 
@@ -89,6 +91,7 @@ class Bert(commands.Cog):
         """
         Bert MLM
         """
+
         content = " ".join(content)
         message = get_mlm_message(tokenizer, model, mask_id, content, stopwords=stopword_ids)
 
@@ -102,6 +105,7 @@ class Bert(commands.Cog):
         """
         Make Bert fill in words marked with [MASK] in sentences
         """
+
         content = " ".join(content)
         result = insert(tokenizer, model, mask_id, content, stopwords=stopword_ids)
 
@@ -124,6 +128,7 @@ class Bert(commands.Cog):
         """
         NorBert MLM
         """
+
         content = " ".join(content)
         message = get_mlm_message(nor_tokenizer, nor_model, nor_mask_id, content, stopwords=nor_stopword_ids)
 
@@ -137,6 +142,7 @@ class Bert(commands.Cog):
         """
         Make Bert fill in words marked with [MASK] in sentences
         """
+
         content = " ".join(content)
         result = insert(nor_tokenizer, nor_model, nor_mask_id, content, stopwords=nor_stopword_ids)
 
