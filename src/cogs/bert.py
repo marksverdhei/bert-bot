@@ -91,12 +91,31 @@ class Bert(commands.Cog):
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
 
+
+    @bert.command(name="top")
+    async def top(self, ctx, *content):
+        print(content)
+        assert content[0].isdigit(), f"{content[0]} is not a digit"
+        n = int(content[0])
+        content = " ".join(content[1:])
+
+        results = []
+        for i, s in enumerate(get_topn(content, tokenizer, model, mask_id, n, stopwords=stopword_ids)):
+            i = i%n
+            print(i, s)
+            if len(results) == i:
+                results.append([f"{i+1}: {s}"])
+            else:
+                results[i].append(s)
+
+        message = "\n".join("\t".join(i for i in r) for r in results)
+        await ctx.reply(message)
+
     @bert.command(name="mlm")
     async def mlm(self, ctx, *content):
         """
         Bert MLM
         """
-
         content = " ".join(content)
         message = get_mlm_message(tokenizer, model, mask_id, content, stopwords=stopword_ids)
 
@@ -127,6 +146,24 @@ class Bert(commands.Cog):
 
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
+
+    @norbert.command(name="top")
+    async def top(self, ctx, *content):
+        assert content[0].isdigit()
+        n = int(content[0])
+        content = " ".join(content[1:])
+
+        results = []
+        for i, s in enumerate(get_topn(content, nor_tokenizer, nor_model, nor_mask_id, n, stopwords=nor_stopword_ids)):
+            i = i%n
+            print(i, s)
+            if len(results) == i:
+                results.append([f"{i+1}: {s}"])
+            else:
+                results[i].append(s)
+
+        message = "\n".join("\t".join(i for i in r) for r in results)
+        await ctx.reply(message)
 
     @norbert.command(name="mlm")
     async def normlm(self, ctx, *content):
