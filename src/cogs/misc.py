@@ -110,6 +110,10 @@ class Misc(commands.Cog):
 
     @commands.command()
     async def ping(self, ctx):
+        """
+        Check if the bot is able to respond
+        """
+
         await ctx.reply("Pong!")
 
     async def get_uptime(self):

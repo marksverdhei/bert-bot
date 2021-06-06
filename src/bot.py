@@ -22,7 +22,8 @@ class Bot(commands.Bot):
         super().__init__(
             command_prefix=commands.when_mentioned_or(os.getenv("PREFIX")),
             case_insensitive=True,
-            allowed_mentions=mentions
+            allowed_mentions=mentions,
+            help_command=None
         )
 
         self.source_code_url = os.getenv("SOURCE_CODE_URL")

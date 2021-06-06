@@ -114,7 +114,9 @@ class Bert(commands.Cog):
     @bert.command(name="mlm")
     async def mlm(self, ctx, *content):
         """
-        Bert MLM
+        Get the top 5 suggested filler words for a given text.
+
+        `[content...]` - Text input. Bert will suggest words where `_` is found.
         """
         content = " ".join(content)
         message = get_mlm_message(tokenizer, model, mask_id, content, stopwords=stopword_ids)
@@ -127,7 +129,9 @@ class Bert(commands.Cog):
     @bert.command(name="insert")
     async def insert(self, ctx, *content):
         """
-        Make Bert fill in words marked with [MASK] in sentences
+        Make Bert fill in words in a given text.
+
+        `[content...]` - Text input. Bert will fill in words where `_` is found.
         """
 
         content = " ".join(content)
@@ -168,7 +172,9 @@ class Bert(commands.Cog):
     @norbert.command(name="mlm")
     async def normlm(self, ctx, *content):
         """
-        NorBert MLM
+        Get the top 5 suggested filler words for a given text.
+
+        `[content...]` - Text input. Bert will suggest words where `_` is found.
         """
 
         content = " ".join(content)
@@ -182,7 +188,9 @@ class Bert(commands.Cog):
     @norbert.command(name="insert")
     async def norinsert(self, ctx, *content):
         """
-        Make Bert fill in words marked with [MASK] in sentences
+        Make Bert fill in words marked with `_` in a given text.
+
+        `[content...]` - Text input. Bert will suggest words where `_` is found.
         """
 
         content = " ".join(content)
