@@ -85,6 +85,14 @@ async def no_mask_error(ctx):
     embed_templates.default_footer(ctx, embed)
     await ctx.reply(embed=embed)
 
+async def no_number_error(ctx):
+    embed = discord.Embed(
+        color=discord.Color.gold(),
+        description="⚠ Invalid call signature. `top` must be followed by a number (e.g. `!bert top 7 Hello _!`)"
+    )
+    embed_templates.default_footer(ctx, embed)
+    await ctx.reply(embed=embed)
+
 
 class Bert(commands.Cog):
     def __init__(self, bot):
@@ -107,7 +115,9 @@ class Bert(commands.Cog):
         `[content...]` - Text input. Bert will suggest words where `_` is found.
 
         """
-        assert content[0].isdigit(), f"{content[0]} is not a digit"
+        if not (content and content[0].isdigit()):
+            return await no_number_error(ctx)
+
         n = int(content[0])
         content = " ".join(content[1:])
 
@@ -120,6 +130,10 @@ class Bert(commands.Cog):
                 results[i].append(s)
 
         message = make_padded_result_message(results)
+
+        if not message:
+            return await no_mask_error(ctx)
+
         await ctx.reply(message)
 
     @bert.command(name="mlm")
@@ -170,7 +184,10 @@ class Bert(commands.Cog):
         `[content...]` - Text input. Bert will suggest words where `_` is found.
 
         """
-        assert content[0].isdigit()
+        if not (content and content[0].isdigit()):
+            return await no_number_error(ctx)
+
+        # assert content[0].isdigit()
         n = int(content[0])
         content = " ".join(content[1:])
 
@@ -183,6 +200,10 @@ class Bert(commands.Cog):
                 results[i].append(s)
 
         message = make_padded_result_message(results)
+
+        if not message:
+            return await no_mask_error(ctx)
+
         await ctx.reply(message)
 
     @norbert.command(name="mlm")
