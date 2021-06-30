@@ -25,7 +25,7 @@ nor_model.eval()
 # #
 
 
-def get_topn(content, tokenizer, model, mask_id, n, stopwords=None):
+def get_topn(content, tokenizer, model, mask_id, n, stopwords=None, bold=True):
     content = re.sub("_+", "[MASK]", content)
     tokens = tokenizer(content, return_tensors="pt")
     with torch.no_grad():
@@ -46,9 +46,12 @@ def get_topn(content, tokenizer, model, mask_id, n, stopwords=None):
                 topn = sorted_logits[:n]
 
             substitutions = tokenizer.convert_ids_to_tokens(topn)
-            for j, s in enumerate(substitutions):
-                yield f"**{s}**"
 
+            if bold:
+                for s in substitutions:
+                    yield f"**{s}**"
+            else:
+                yield from substitutions
 
 def insert(tokenizer, model, mask_id, content, stopwords=None):
     result_string = functools.reduce(
@@ -68,11 +71,24 @@ def get_mlm_message(tokenizer, model, mask_id, content, stopwords=None):
             message += f"{i}: {s}\n"
     return message
 
+def make_padded_result_message(results):
+    max_space = [max(len(row[i]) for row in results) for i in range(len(results[0]))]
+    results_padded = [[s + " " * (max_space[i]-len(s)) for i, s in enumerate(row)] for row in results]
+    message = "\n".join("`" + (" | ".join(i for i in r)) + "`" for r in results_padded)
+    return message
 
 async def no_mask_error(ctx):
     embed = discord.Embed(
         color=discord.Color.gold(),
         description="⚠ Invalid call signature. Must include a `[MASK]` or `_`"
+    )
+    embed_templates.default_footer(ctx, embed)
+    await ctx.reply(embed=embed)
+
+async def no_number_error(ctx):
+    embed = discord.Embed(
+        color=discord.Color.gold(),
+        description="⚠ Invalid call signature. `top` must be followed by a number (e.g. `!bert top 7 Hello _!`)"
     )
     embed_templates.default_footer(ctx, embed)
     await ctx.reply(embed=embed)
@@ -91,6 +107,35 @@ class Bert(commands.Cog):
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
 
+    @bert.command(name="top")
+    async def top(self, ctx, *content):
+        """
+        Get the top-n substitutes for the masked token
+
+        `[content...]` - Text input. Bert will suggest words where `_` is found.
+
+        """
+        if not (content and content[0].isdigit()):
+            return await no_number_error(ctx)
+
+        n = int(content[0])
+        content = " ".join(content[1:])
+
+        results = []
+        for i, s in enumerate(get_topn(content, tokenizer, model, mask_id, n, stopwords=stopword_ids, bold=False)):
+            i = i % n
+            if len(results) == i:
+                results.append([f"{i+1}: {s}"])
+            else:
+                results[i].append(s)
+
+        message = make_padded_result_message(results)
+
+        if not message:
+            return await no_mask_error(ctx)
+
+        await ctx.reply(message)
+
     @bert.command(name="mlm")
     async def mlm(self, ctx, *content):
         """
@@ -98,7 +143,6 @@ class Bert(commands.Cog):
 
         `[content...]` - Text input. Bert will suggest words where `_` is found.
         """
-
         content = " ".join(content)
         message = get_mlm_message(tokenizer, model, mask_id, content, stopwords=stopword_ids)
 
@@ -131,6 +175,36 @@ class Bert(commands.Cog):
 
         if ctx.invoked_subcommand is None:
             await ctx.send_help(ctx.command)
+
+    @norbert.command(name="top")
+    async def nortop(self, ctx, *content):
+        """
+        Get the top-n substitutes for the masked token
+
+        `[content...]` - Text input. Bert will suggest words where `_` is found.
+
+        """
+        if not (content and content[0].isdigit()):
+            return await no_number_error(ctx)
+
+        # assert content[0].isdigit()
+        n = int(content[0])
+        content = " ".join(content[1:])
+
+        results = []
+        for i, s in enumerate(get_topn(content, nor_tokenizer, nor_model, nor_mask_id, n, stopwords=nor_stopword_ids, bold=False)):
+            i = i % n
+            if len(results) == i:
+                results.append([f"{i+1}: {s}"])
+            else:
+                results[i].append(s)
+
+        message = make_padded_result_message(results)
+
+        if not message:
+            return await no_mask_error(ctx)
+
+        await ctx.reply(message)
 
     @norbert.command(name="mlm")
     async def normlm(self, ctx, *content):
