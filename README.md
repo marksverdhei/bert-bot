@@ -1,6 +1,6 @@
 # bert-bot
 
-A Discord bot that utilizes the [BERT](https://en.wikipedia.org/wiki/BERT_(language_model)) and [NorBERT](http://wiki.nlpl.eu/Vectors/norlm/norbert) language models to make word predictions within text.
+A Discord bot that utilizes the [BERT](https://en.wikipedia.org/wiki/BERT_(language_model)) and [NorBERT 2](http://wiki.nlpl.eu/Vectors/norlm/norbert) language models to make word predictions within text.
 
 ## Run
 
