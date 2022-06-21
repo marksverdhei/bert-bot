@@ -51,4 +51,4 @@ async def on_ready():
     )
 
 
-bot.run(os.getenv("DISCORD_TOKEN"), bot=True, reconnect=True)
+bot.run(os.getenv("DISCORD_TOKEN"), reconnect=True)
