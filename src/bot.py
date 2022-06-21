@@ -23,6 +23,7 @@ class Bot(commands.Bot):
             command_prefix=commands.when_mentioned_or(os.getenv("PREFIX")),
             case_insensitive=True,
             allowed_mentions=mentions,
+            intents=discord.Intents.default(),
             help_command=None
         )
 
