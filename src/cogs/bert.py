@@ -16,9 +16,9 @@ mask_id = tokenizer("[MASK]", add_special_tokens=False).input_ids[0]
 stopword_ids = stopwords.get_stopword_ids(tokenizer, stopwords.english, cased=False)
 model.eval()
 
-nor_tokenizer = BertTokenizer.from_pretrained("ltgoslo/norbert")
+nor_tokenizer = BertTokenizer.from_pretrained("ltgoslo/norbert2")
 nor_tokenizer.unique_no_split_tokens.extend(nosplit_tokens)
-nor_model = BertForMaskedLM.from_pretrained("ltgoslo/norbert")
+nor_model = BertForMaskedLM.from_pretrained("ltgoslo/norbert2")
 nor_mask_id = nor_tokenizer("[MASK]", add_special_tokens=False).input_ids[0]
 nor_stopword_ids = stopwords.get_stopword_ids(nor_tokenizer, stopwords.norwegian, cased=True)
 nor_model.eval()
