@@ -239,5 +239,5 @@ class Bert(commands.Cog):
         await ctx.reply(result)
 
 
-def setup(bot):
-    bot.add_cog(Bert(bot))
+async def setup(bot):
+    await bot.add_cog(Bert(bot))

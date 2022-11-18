@@ -29,6 +29,14 @@ class Bot(commands.Bot):
 
         self.source_code_url = os.getenv("SOURCE_CODE_URL")
 
+    async def setup_hook(self):
+        # Load cogs
+        for file in os.listdir("./cogs"):
+            if file.endswith(".py"):
+                name = file[:-3]
+                await bot.load_extension(f"cogs.{name}")
+
+
 
 bot = Bot()
 

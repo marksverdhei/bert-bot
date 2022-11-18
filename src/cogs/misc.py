@@ -130,5 +130,5 @@ class Misc(commands.Cog):
         return f"{days}d, {hours}h, {minutes}m, {seconds}s"
 
 
-def setup(bot):
-    bot.add_cog(Misc(bot))
+async def setup(bot):
+    await bot.add_cog(Misc(bot))
