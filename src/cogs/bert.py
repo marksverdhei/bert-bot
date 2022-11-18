@@ -1,5 +1,6 @@
-from discord.ext import commands
 import discord
+from discord import app_commands
+from discord.ext import commands
 
 from transformers import BertTokenizer, BertForMaskedLM
 import torch
@@ -53,6 +54,7 @@ def get_topn(content, tokenizer, model, mask_id, n, stopwords=None, bold=True):
             else:
                 yield from substitutions
 
+
 def insert(tokenizer, model, mask_id, content, stopwords=None):
     result_string = functools.reduce(
         (lambda x, y: re.sub(r"(\[MASK\]|_+)", y, x, 1)),
@@ -71,59 +73,41 @@ def get_mlm_message(tokenizer, model, mask_id, content, stopwords=None):
             message += f"{i}: {s}\n"
     return message
 
+
 def make_padded_result_message(results):
     max_space = [max(len(row[i]) for row in results) for i in range(len(results[0]))]
     results_padded = [[s + " " * (max_space[i]-len(s)) for i, s in enumerate(row)] for row in results]
     message = "\n".join("`" + (" | ".join(i for i in r)) + "`" for r in results_padded)
     return message
 
-async def no_mask_error(ctx):
+
+async def no_mask_error(interaction: discord.Interaction):
     embed = discord.Embed(
         color=discord.Color.gold(),
         description="⚠ Invalid call signature. Must include a `[MASK]` or `_`"
     )
-    embed_templates.default_footer(ctx, embed)
-    await ctx.reply(embed=embed)
-
-async def no_number_error(ctx):
-    embed = discord.Embed(
-        color=discord.Color.gold(),
-        description="⚠ Invalid call signature. `top` must be followed by a number (e.g. `!bert top 7 Hello _!`)"
-    )
-    embed_templates.default_footer(ctx, embed)
-    await ctx.reply(embed=embed)
+    embed_templates.default_footer_interaction(interaction, embed)
+    await interaction.response.send_message(embed=embed)
 
 
 class Bert(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.group(name="bert")
-    async def bert(self, ctx):
-        """
-        Bert commands
-        """
+    bert = app_commands.Group(name="bert", description="English BERT model commands")
+    norbert = app_commands.Group(name="norbert", description="Norwegian BERT model commands")
 
-        if ctx.invoked_subcommand is None:
-            await ctx.send_help(ctx.command)
-
-    @bert.command(name="top")
-    async def top(self, ctx, *content):
+    @bert.command(name="top", description="Get the top-n substitutes for the masked token")
+    async def bert_top(self, interaction: discord.Interaction, number_of_suggestions: app_commands.Range[int, 1, 20], content: str):
         """
         Get the top-n substitutes for the masked token
 
         `[content...]` - Text input. Bert will suggest words where `_` is found.
 
         """
-        if not (content and content[0].isdigit()):
-            return await no_number_error(ctx)
-
-        n = int(content[0])
-        content = " ".join(content[1:])
-
         results = []
-        for i, s in enumerate(get_topn(content, tokenizer, model, mask_id, n, stopwords=stopword_ids, bold=False)):
-            i = i % n
+        for i, s in enumerate(get_topn(content, tokenizer, model, mask_id, number_of_suggestions, stopwords=stopword_ids, bold=False)):
+            i = i % number_of_suggestions
             if len(results) == i:
                 results.append([f"{i+1}: {s}"])
             else:
@@ -132,68 +116,35 @@ class Bert(commands.Cog):
         message = make_padded_result_message(results)
 
         if not message:
-            return await no_mask_error(ctx)
+            return await no_mask_error(interaction)
 
-        await ctx.reply(message)
+        await interaction.response.send_message(message)
 
-    @bert.command(name="mlm")
-    async def mlm(self, ctx, *content):
-        """
-        Get the top 5 suggested filler words for a given text.
-
-        `[content...]` - Text input. Bert will suggest words where `_` is found.
-        """
-        content = " ".join(content)
-        message = get_mlm_message(tokenizer, model, mask_id, content, stopwords=stopword_ids)
-
-        if not message:
-            return await no_mask_error(ctx)
-
-        await ctx.reply(message)
-
-    @bert.command(name="insert")
-    async def insert(self, ctx, *content):
+    @bert.command(name="insert", description="Make BERT fill in words marked with `_` in a given text")
+    async def bert_insert(self, interaction: discord.Interaction, content: str):
         """
         Make Bert fill in words in a given text.
 
         `[content...]` - Text input. Bert will fill in words where `_` is found.
         """
-
-        content = " ".join(content)
         result = insert(tokenizer, model, mask_id, content, stopwords=stopword_ids)
 
         if not result or result == content:
-            return await no_mask_error(ctx)
+            return await no_mask_error(interaction)
 
-        await ctx.reply(result)
+        await interaction.response.send_message(result)
 
-    @commands.group(name="norbert")
-    async def norbert(self, ctx):
-        """
-        NorBert commands
-        """
-
-        if ctx.invoked_subcommand is None:
-            await ctx.send_help(ctx.command)
-
-    @norbert.command(name="top")
-    async def nortop(self, ctx, *content):
+    @norbert.command(name="top", description="Get the top-n substitutes for the masked token")
+    async def norbert_top(self, interaction: discord.Interaction, number_of_suggestions: app_commands.Range[int, 1, 20], content: str):
         """
         Get the top-n substitutes for the masked token
 
         `[content...]` - Text input. Bert will suggest words where `_` is found.
 
         """
-        if not (content and content[0].isdigit()):
-            return await no_number_error(ctx)
-
-        # assert content[0].isdigit()
-        n = int(content[0])
-        content = " ".join(content[1:])
-
         results = []
-        for i, s in enumerate(get_topn(content, nor_tokenizer, nor_model, nor_mask_id, n, stopwords=nor_stopword_ids, bold=False)):
-            i = i % n
+        for i, s in enumerate(get_topn(content, nor_tokenizer, nor_model, nor_mask_id, number_of_suggestions, stopwords=nor_stopword_ids, bold=False)):
+            i = i % number_of_suggestions
             if len(results) == i:
                 results.append([f"{i+1}: {s}"])
             else:
@@ -202,41 +153,23 @@ class Bert(commands.Cog):
         message = make_padded_result_message(results)
 
         if not message:
-            return await no_mask_error(ctx)
+            return await no_mask_error(interaction)
 
-        await ctx.reply(message)
+        await interaction.response.send_message(message)
 
-    @norbert.command(name="mlm")
-    async def normlm(self, ctx, *content):
-        """
-        Get the top 5 suggested filler words for a given text.
-
-        `[content...]` - Text input. Bert will suggest words where `_` is found.
-        """
-
-        content = " ".join(content)
-        message = get_mlm_message(nor_tokenizer, nor_model, nor_mask_id, content, stopwords=nor_stopword_ids)
-
-        if not message:
-            return await no_mask_error(ctx)
-
-        await ctx.reply(message)
-
-    @norbert.command(name="insert")
-    async def norinsert(self, ctx, *content):
+    @norbert.command(name="insert", description="Make NorBERT fill in words marked with `_` in a given text")
+    async def norbert_insert(self, interaction: discord.Interaction, content: str):
         """
         Make Bert fill in words marked with `_` in a given text.
 
         `[content...]` - Text input. Bert will suggest words where `_` is found.
         """
-
-        content = " ".join(content)
         result = insert(nor_tokenizer, nor_model, nor_mask_id, content, stopwords=nor_stopword_ids)
 
         if not result or result == content:
-            return await no_mask_error(ctx)
+            return await no_mask_error(interaction)
 
-        await ctx.reply(result)
+        await interaction.response.send_message(result)
 
 
 async def setup(bot):
