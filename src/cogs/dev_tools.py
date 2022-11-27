@@ -23,12 +23,12 @@ class DevTools(commands.Cog):
         for file in listdir("./cogs"):
             if file.endswith(".py"):
                 name = file[:-3]
-                self.bot.unload_extension(f"cogs.{name}")
+                await self.bot.unload_extension(f"cogs.{name}")
 
         for file in listdir("./cogs"):
             if file.endswith(".py"):
                 name = file[:-3]
-                self.bot.load_extension(f"cogs.{name}")
+                await self.bot.load_extension(f"cogs.{name}")
 
         githash = Repo("../").head.commit
 
@@ -63,11 +63,11 @@ class DevTools(commands.Cog):
         for file in listdir("./cogs"):
             if file.endswith(".py"):
                 name = file[:-3]
-                self.bot.reload_extension(f"cogs.{name}")
+                await self.bot.reload_extension(f"cogs.{name}")
 
         embed = discord.Embed(color=ctx.me.color, description="✅ Done!")
         await ctx.reply(embed=embed)
 
 
-def setup(bot):
-    bot.add_cog(DevTools(bot))
+async def setup(bot):
+    await bot.add_cog(DevTools(bot))

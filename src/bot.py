@@ -28,6 +28,21 @@ class Bot(commands.Bot):
         )
 
         self.source_code_url = os.getenv("SOURCE_CODE_URL")
+        self.config_mode = os.getenv("CONFIG_MODE", "dev")
+
+    async def setup_hook(self):
+        # Load cogs
+        for file in os.listdir("./cogs"):
+            if file.endswith(".py"):
+                name = file[:-3]
+                await bot.load_extension(f"cogs.{name}")
+
+        # Sync slash commands to Discord
+        if self.config_mode == "prod":
+            await self.tree.sync()
+        else:
+            self.tree.copy_global_to(guild=discord.Object(id=412646636771344395))
+            await self.tree.sync(guild=discord.Object(id=412646636771344395))
 
 
 bot = Bot()
@@ -38,14 +53,10 @@ async def on_ready():
     if not hasattr(bot, "uptime"):
         bot.uptime = time()
 
-    for file in os.listdir("./cogs"):
-        if file.endswith(".py"):
-            name = file[:-3]
-            bot.load_extension(f"cogs.{name}")
-
     print("-" * 50)
     print(f"{bot.user.name} has connected to Discord!")
     print("-" * 50)
+
     await bot.change_presence(
         activity=discord.Activity(type=3, name=os.getenv("ACTIVITY_MESSAGE")),
         status=discord.Status.online
